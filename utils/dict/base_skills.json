@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "name": "Python",
+        "category": "Programming"
+    },
+    {
+        "id": 2,
+        "name": "Java",
+        "category": "Programming"
+    },
+    {
+        "id": 3,
+        "name": "GIT",
+        "category": "Programming"
+    },
+    {
+        "id": 4,
+        "name": "PostgreSQL",
+        "category": "Programming"
+    },
+    {
+        "id": 5,
+        "name": "Figma",
+        "category": "Design"
+    }
+]

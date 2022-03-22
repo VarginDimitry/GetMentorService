@@ -12,8 +12,6 @@ from app.models.dict import BaseSkillModel, BaseCategoryModel
 def dict_base_skills(api_version: str):
     if request.method == 'GET':
         skills: List[BaseSkillModel] = BaseSkillModel.query.all()
-        print('\n!!!!!!!!!!\n', type(skills), '\n!!!!!!!!!!!!!!!')
-        pprint(skills)
         return jsonify([s.to_dict for s in skills])
     else:
         new_skill_json = request.json

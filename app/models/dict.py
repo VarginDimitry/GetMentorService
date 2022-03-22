@@ -11,8 +11,8 @@ class BaseSkillModel(db.Model):
     name = db.Column(db.String(), nullable=False)
     category = db.Column(db.String(), nullable=False)
 
-    def __init__(self, name: str, category: str):
-        self.id = None
+    def __init__(self, name: str, category: str, id=None):
+        self.id = id
 
         self.name = name
         self.category = category
@@ -36,10 +36,17 @@ class BaseCategoryModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(), nullable=False)
 
-    def __init__(self, name: str):
-        self.id = None
+    def __init__(self, name: str, id=None):
+        self.id = id
 
         self.name = name
 
     def __repr__(self):
         return f"<base_skill {self.id} | {self.name}>"
+
+    @property
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name
+        }
