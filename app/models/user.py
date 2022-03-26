@@ -1,12 +1,13 @@
 import base64
 from datetime import datetime, timedelta
 import flask_sqlalchemy
+import hashlib
 import jwt
 from sqlalchemy.orm import relationship
 
 from app import db, bcrypt, app
 
-from utils.enums import GenderEnum
+from utils.enums import GenderEnum, TokenType
 
 
 class UserModel(db.Model):
@@ -22,7 +23,7 @@ class UserModel(db.Model):
 
     gender = db.Column(db.Enum(GenderEnum), nullable=False)
 
-    phone = db.Column(db.String(), nullable=True, unique=True)
+    phone = db.Column(db.String(), nullable=True)
     email = db.Column(db.String(), nullable=False, unique=True)
     telegram_profile = db.Column(db.String, nullable=True)
 
@@ -40,9 +41,10 @@ class UserModel(db.Model):
         self.last_name = last_name
         self.gender = gender
         self.email = email
-        self.password = bcrypt.generate_password_hash(
-            password, app.config.get('BCRYPT_LOG_ROUNDS')
-        ).decode()
+        self.password = hashlib.sha256(password.encode()).hexdigest()
+        # self.password = bcrypt.generate_password_hash(
+        #     password, app.config.get('BCRYPT_LOG_ROUNDS')
+        # ).decode()
 
         self.phone = phone
         self.telegram_profile = telegram_profile
@@ -50,48 +52,48 @@ class UserModel(db.Model):
 
         self.dateTimeAdd = datetime.utcnow()
 
-    def encode_auth_token(self, user_id, email):
+    def encode_token(self, token_type: TokenType):
         """
         Generates the Auth Token
         :return: string
         """
-        try:
-            payload = {
-                'exp': datetime.utcnow() + timedelta(minutes=2),
-                'iat': datetime.utcnow(),
+        if token_type == TokenType.ACCESS:
+            life_time: int = app.config.get('ACCESS_TOKEN_LIFE')
+        elif token_type == TokenType.REFRESH:
+            life_time: int = app.config.get('REFRESH_TOKEN_LIFE')
+        else:
+            raise ValueError("You has used some invalid token type. Use utils.enums.TokenType enum")
+        payload = {
+            'exp': datetime.utcnow() + timedelta(minutes=life_time),
+            'iat': datetime.utcnow(),
 
-                'sub': user_id,
-                'email': email,
-            }
-            return jwt.encode(
-                payload=payload,
-                key=app.config.get('SECRET_KEY'),
-                algorithm='HS256'
-            )
-        except Exception as e:
-            return e
+            'id': self.id,
+            'email': self.email,
+        }
+        return jwt.encode(
+            payload=payload,
+            key=app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
 
     @staticmethod
-    def decode_auth_token(auth_token):
-        # try:
-        t_sp = auth_token.split('.')
-        t_sp[-1] = base64.b64encode(t_sp[-1].encode('ascii')).decode()
-        tt = '.'.join(t_sp)
-        print(f"token={tt}")
-        secret: str = app.config.get('SECRET_KEY')
-        payload = jwt.decode(
-            jwt=auth_token,
-            key=secret,
-            algorithms=['HS256'],
-        )
-        return payload
-        # except jwt.ExpiredSignatureError:
-        #     return 'Signature expired. Please log in again.'
-        # except jwt.InvalidTokenError:
-        #     return 'Invalid token. Please log in again.'
+    def decode_token(token) -> dict:
+        try:
+            return jwt.decode(
+                jwt=token,
+                key=app.config.get('SECRET_KEY'),
+                algorithms=['HS256'],
+            )
+        except jwt.ExpiredSignatureError:
+            return {'error': 'Signature expired. Please log in again.'}
+        except jwt.InvalidTokenError:
+            return {'error': 'Invalid token. Please log in again.'}
 
     def __repr__(self):
         return f"<user {self.id} | {self.first_name}>"
+
+    def __str__(self):
+        return self.__repr__()
 
     @property
     def to_dict(self) -> dict:
@@ -114,3 +116,19 @@ class UserModel(db.Model):
         res['dateTimeAdd'] = int(self.dateTimeAdd.timestamp())
         res.pop('password')
         return res
+
+    @staticmethod
+    def assert_user_hash_with_password(user, password: str) -> bool:
+        if password:
+            return user.password == hashlib.sha256(password.encode()).hexdigest()
+        else:
+            return False
+
+    def assert_password(self, password: str) -> bool:
+        # old_pass = self.password
+        # new_pass = hashlib.sha256(password.encode()).hexdigest()
+        # print(f"\n{str(type(old_pass)).ljust(4)} {old_pass=}\n{str(type(new_pass)).ljust(4)} {new_pass=}\n")
+        if password:
+            return self.password == hashlib.sha256(password.encode()).hexdigest()
+        else:
+            return False

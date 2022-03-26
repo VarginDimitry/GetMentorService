@@ -10,7 +10,7 @@ import os
 from sqlalchemy.orm import Query
 
 db: SQLAlchemy = None
-folder_path = 'dict'
+folder_path = ''
 
 
 def create_skills():
@@ -32,6 +32,8 @@ if __name__ == '__main__':
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:qwe321@localhost:5432/gms"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db = SQLAlchemy(app)
+    app.config.from_object('utils.configs.LocalConfig')
+    folder_path = app.config.get('RES_DIR')
     from app.models import *
 
     migrate = Migrate(app, db)

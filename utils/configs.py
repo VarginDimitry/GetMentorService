@@ -16,6 +16,11 @@ class Config:
     a = DB_NAME
     DATABASE_URI = SQLALCHEMY_DATABASE_URI = f"{DB_ENGINE}://{DB_USER_NAME}:{DB_USER_PASSWORD}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
 
+    ACCESS_TOKEN_LIFE = 10  # minutes
+    REFRESH_TOKEN_LIFE = 20  # minutes
+
+    RES_DIR = './res'
+
 
 class LocalConfig(Config):
     DB_SERVER = 'localhost'

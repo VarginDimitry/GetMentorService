@@ -22,7 +22,7 @@ def users_get_users(api_version: str):
             return {
                 'user': user.to_dict,
                 'token': token,
-                'untoken': user.decode_auth_token(token)
+                'untoken': user.decode_token(token)
             }
         else:
             users: List[UserModel] = UserModel.query.all()

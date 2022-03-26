@@ -1,5 +1,11 @@
+psycopg2==2.9.3
 SQLAlchemy==1.4.31
-Flask==2.0.3
 alembic==1.7.6
 bcrypt==3.2.0
 PyJWT==2.3.0
+
+Flask==2.0.3
+Flask-SQLAlchemy==2.5.1
+Flask-Script==2.0.6
+Flask-Migrate==3.1.0
+Flask-Bcrypt==0.7.1

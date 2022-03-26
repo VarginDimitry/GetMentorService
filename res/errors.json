@@ -1,0 +1,22 @@
+{
+    "200": {
+        "code": 200,
+        "label": "SUCCESS",
+        "msg": "Success"
+    },
+    "400": {
+        "code": 400,
+        "label": "BAD_REQUEST",
+        "msg": "Bad request"
+    },
+    "401": {
+        "code": 401,
+        "label": "UNAUTHORIZED",
+        "msg": "You are not unauthorized"
+    },
+    "499": {
+        "code": 499,
+        "label": "UNKNOWN",
+        "msg": "Unknown error"
+    }
+}
