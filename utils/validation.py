@@ -20,7 +20,7 @@ def validation_request(schema=None, with_token=False):
                     return ErrorManager.get_res(ErrorEnum.BAD_REQUEST, msg=validation['msg'])
             else:
                 return func(*args, **kwargs)
-
+        wrapper.__name__ = func.__name__
         return wrapper
     return inner
 

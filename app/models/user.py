@@ -108,6 +108,7 @@ class UserModel(db.Model):
             'telegram_profile': self.telegram_profile,
             'middle_name': self.middle_name,
             'dateTimeAdd': self.dateTimeAdd,
+            'cvs': [cv.to_dict for cv in self.cvs]
         }
 
     @property

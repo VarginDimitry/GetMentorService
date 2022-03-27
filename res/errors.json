@@ -14,9 +14,24 @@
         "label": "UNAUTHORIZED",
         "msg": "You are not unauthorized"
     },
+    "404": {
+        "code": 404,
+        "label": "NOT_FOUND",
+        "msg": "The object not found"
+    },
+    "409": {
+        "code": 409,
+        "label": "CONFLICT",
+        "msg": "Some conflict with existing data"
+    },
     "499": {
         "code": 499,
         "label": "UNKNOWN",
         "msg": "Unknown error"
+    },
+    "500": {
+        "code": 500,
+        "label": "INTERNAL_SERVER_ERROR",
+        "msg": "Something went wrong"
     }
 }

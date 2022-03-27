@@ -11,7 +11,7 @@ from app.models.user import UserModel
 from utils import ErrorManager
 
 from utils.enums import GenderEnum, ErrorEnum, TokenType
-from utils.validation import validation_request, validate_token
+from utils.validation import validation_request
 
 
 @app.route('/api/<api_version>/auth/refresh_token', methods=['GET'])

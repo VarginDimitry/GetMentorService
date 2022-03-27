@@ -7,6 +7,7 @@ import json
 
 from app import app, db
 from app.models.user import UserModel
+from utils import ErrorManager, ErrorEnum
 
 from utils.enums import GenderEnum
 
@@ -32,7 +33,7 @@ def registration(api_version):
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({'msg': 'ok'}), 200
+        return jsonify({'msg': 'ok', 'inserted': new_user.to_json_res}), 200
     except IntegrityError as ex:
         pprint(ex.params)
-        return jsonify({'msg': 'not ok', 'err': ''}), 409
+        return ErrorManager.get_res(ErrorEnum.CONFLICT, msg="User with this email already exists")

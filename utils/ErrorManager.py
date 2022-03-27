@@ -1,5 +1,6 @@
 import json
 import os
+from pprint import pprint
 from typing import Dict, List
 
 from flask import Response
@@ -22,13 +23,13 @@ class ErrorManager:
             }
 
     @staticmethod
-    def get(err_type: ErrorEnum, msg: str) -> Dict:
-        return ErrorManager.errors.get(err_type, ErrorEnum.UNKNOWN) | {
-            'msg': msg,
-        }
+    def get(err_type: ErrorEnum, msg: str = None) -> Dict:
+        res = ErrorManager.errors.get(err_type, ErrorManager.errors.get(ErrorEnum.UNKNOWN))
+        res['msg'] = res if msg is None else msg
+        return res
 
     @staticmethod
-    def get_res(err_type: ErrorEnum, msg: str) -> Response:
+    def get_res(err_type: ErrorEnum, msg: str = None) -> Response:
         return Response(
             json.dumps(ErrorManager.get(err_type, msg)),
             status=err_type.value,
