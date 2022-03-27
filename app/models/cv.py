@@ -20,11 +20,15 @@ class CVModel(db.Model):
     cv_skills = db.relationship("CVSkillModel", cascade="all, delete", backref="cv")
     cv_times = db.relationship("CVTimeModel", cascade="all, delete", backref="cv")
 
+    click_count = db.Column(db.Integer, nullable=False, default=0)
+    is_hidden = db.Column(db.Boolean, nullable=False, default=False)
+
     dateTimeAdd = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
 
-    def __init__(self, user_id: int):
+    def __init__(self, user_id: int, is_hidden=False):
         self.id = None
         self.user_id = user_id
+        self.is_hidden = is_hidden
 
     def get_updated(self):
         return self.query.get(self.id)
@@ -36,6 +40,7 @@ class CVModel(db.Model):
             'user_id': self.user_id,
             'cv_skills': [s.to_dict for s in self.cv_skills],
             'cv_times': [t.to_dict for t in self.cv_times],
+            'isHidden': self.is_hidden,
             'dateTimeAdd': self.dateTimeAdd,
         }
 
@@ -63,11 +68,12 @@ class CVSkillModel(db.Model):
     dateTimeAdd = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
 
     def __init__(self, cv_id: int, grade: int, base_skill: BaseSkillModel = None,
-                 name: str = None, category: str = None):
+                 name: str = None, category: str = None, is_hidden=False):
 
         self.id = None
         self.cv_id = cv_id
         self.grade = grade
+        self.is_hidden = is_hidden
 
         second_way = name and category
         if base_skill and not second_way:
@@ -79,11 +85,13 @@ class CVSkillModel(db.Model):
         else:
             raise ValueError("You must use one of these constructors: by BaseSkills and by name and category")
 
-    def update(self, cv_id: int = None, name: str = None, category: str = None, grade: int = None):
+    def update(self, cv_id: int = None, name: str = None, category: str = None, grade: int = None,
+               is_hidden: bool = None):
         self.cv_id = self.cv_id if cv_id is None else cv_id
         self.name = self.name if name is None else name
         self.category = self.category if category is None else category
         self.grade = self.grade if grade is None else grade
+        self.is_hidden = self.is_hidden if is_hidden is None else is_hidden
         return self
 
     @property
@@ -94,7 +102,7 @@ class CVSkillModel(db.Model):
             'name': self.name,
             'category': self.category,
             'grade': self.grade,
-            'dateTimeAdd': self.dateTimeAdd.timestamp().__int__()
+            'dateTimeAdd': self.dateTimeAdd.timestamp().__int__(),
         }
 
 

@@ -29,12 +29,14 @@ class UserModel(db.Model):
 
     cvs = relationship("CVModel", cascade="all, delete", backref="user")
 
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
+
     password = db.Column(db.String(), nullable=False)
 
     def __init__(self, first_name: str, last_name: str, gender: GenderEnum,
                  email: str, password: str,
                  phone: str = None, telegram_profile: str = None,
-                 middle_name: str = None, id=None):
+                 middle_name: str = None, id=None, is_admin=False):
         self.id = id
 
         self.first_name = first_name
@@ -49,6 +51,7 @@ class UserModel(db.Model):
         self.phone = phone
         self.telegram_profile = telegram_profile
         self.middle_name = middle_name
+        self.is_admin = is_admin
 
         self.dateTimeAdd = datetime.utcnow()
 
@@ -108,14 +111,16 @@ class UserModel(db.Model):
             'telegram_profile': self.telegram_profile,
             'middle_name': self.middle_name,
             'dateTimeAdd': self.dateTimeAdd,
-            'cvs': [cv.to_dict for cv in self.cvs]
+            'cvs': [cv.to_dict for cv in self.cvs],
+            'isAdmin': self.is_admin
         }
 
     @property
     def to_json_res(self) -> dict:
         res = self.to_dict
         res['dateTimeAdd'] = int(self.dateTimeAdd.timestamp())
-        res.pop('password')
+        res.pop('password', None)
+        res.pop('isAdmin', None)
         return res
 
     @staticmethod
