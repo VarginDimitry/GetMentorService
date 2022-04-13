@@ -34,3 +34,22 @@ class ErrorEnum(enum.IntEnum):
     @classmethod
     def _missing_(cls, value):
         return ErrorEnum.UNKNOWN
+
+
+class SortType(enum.Enum):
+    ASC = "ASC"
+    DESC = "DESC"
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.ASC
+
+
+class CVSortRow(enum.Enum):
+    SKILL_NUM = 'skill_num'
+    CLICK_COUNT = 'click_count'
+    DATE_TIME_ADD = 'dateTimeAdd'
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.CLICK_COUNT

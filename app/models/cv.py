@@ -44,6 +44,16 @@ class CVModel(db.Model):
             'dateTimeAdd': self.dateTimeAdd,
         }
 
+    def to_dict_(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'cv_skills': [s.to_dict for s in self.cv_skills],
+            'cv_times': [t.to_dict for t in self.cv_times],
+            'isHidden': self.is_hidden,
+            'dateTimeAdd': self.dateTimeAdd,
+        }
+
 
 class CVSkillModel(db.Model):
     query: flask_sqlalchemy.BaseQuery

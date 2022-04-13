@@ -18,4 +18,5 @@ from utils.validation import validation_request
 def get_me(api_version):
     payload = UserModel.decode_token(request.headers['Authorization'])
     user: UserModel = UserModel.query.get(payload['id'])
-    return {'user': user.to_json_res}, 200
+    res_user = None if user is None else user.to_json_res
+    return {'user': res_user}, 200
