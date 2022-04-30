@@ -33,9 +33,10 @@ skills = [
     }
 ]
 
+
 def gen_users_with_cvs(user_num: int, cvs_per_user: int) -> None:
     with requests.Session() as s:
-        for i in range(1, user_num+1):
+        for i in range(1, user_num + 1):
             print(i)
             email = f'user{i}@gmail.com'
             password = 'qwe323'

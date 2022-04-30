@@ -17,11 +17,11 @@ from utils.validation import validation_request
 
 
 @app.route('/api/<api_version>/cv/search_cv', methods=['GET'])
-@validation_request(with_token=True)
+@validation_request(with_token=False)
 def search_cv(api_version):
     request_body: dict = request.json
-    payload = UserModel.decode_token(request.headers['Authorization'])
-    user: UserModel = UserModel.query.get(payload['id'])
+    # payload = UserModel.decode_token(request.headers['Authorization'])
+    # user: UserModel = UserModel.query.get(payload['id'])
 
     skill_count_label = func.count(CVSkillModel.id).label(CVSortRow.SKILL_NUM.value)
     print(skill_count_label, type(skill_count_label))
@@ -113,5 +113,8 @@ def get_limit_offset(query: flask_sqlalchemy.BaseQuery) -> flask_sqlalchemy.Base
 
 
 def get_search_text(query: flask_sqlalchemy.BaseQuery) -> flask_sqlalchemy.BaseQuery:
-    return query
+    search_text: str = request.json.get('search_text')
+    if not search_text:
+        return query
+    return query.filter(*query_filter)
 

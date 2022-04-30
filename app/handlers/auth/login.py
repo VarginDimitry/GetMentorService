@@ -13,7 +13,7 @@ from utils.enums import GenderEnum, TokenType
 from utils.ErrorManager import ErrorEnum, ErrorManager
 
 
-@app.route('/api/<api_version>/auth/login', methods=['GET'])
+@app.route('/api/<api_version>/auth/login', methods=['GET', 'POST'])
 def login(api_version):
     request_body: dict = request.json
     user: UserModel = UserModel.query.filter(

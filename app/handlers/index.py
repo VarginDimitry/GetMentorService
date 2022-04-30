@@ -1,3 +1,4 @@
+import time
 from flask import render_template
 
 from app import app
@@ -7,3 +8,7 @@ from app import app
 def index():
     return render_template('qwe.html')
 
+
+@app.route('/time', methods=['GET'])
+def get_time():
+    return {'time': time.time()}
