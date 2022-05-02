@@ -12,9 +12,13 @@ from utils import ErrorManager, ErrorEnum
 from utils.enums import GenderEnum
 from utils.validation import validation_request
 
+schema = {
+    "cv_id": {'type': 'string', 'required': False, 'maxlength': 37},
+}
+
 
 @app.route('/api/<api_version>/cv/delete_cv', methods=['DELETE'])
-@validation_request(with_token=True)
+@validation_request(schema=schema, with_token=True)
 def delete_cv(api_version):
     request_body: dict = request.json
     payload = UserModel.decode_token(request.headers['Authorization'])

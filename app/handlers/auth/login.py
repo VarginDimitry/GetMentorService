@@ -11,9 +11,17 @@ from utils.models import UserModel
 
 from utils.enums import GenderEnum, TokenType
 from utils.ErrorManager import ErrorEnum, ErrorManager
+from utils import schemas
+from utils.validation import validation_request
 
+
+schema = {
+    'email': schemas.email_schema,
+    'password': schemas.password_schema,
+}
 
 @app.route('/api/<api_version>/auth/login', methods=['GET', 'POST'])
+@validation_request(schema=schema, with_token=False)
 def login(api_version):
     request_body: dict = request.json
     find_by = {

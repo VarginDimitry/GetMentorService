@@ -12,6 +12,15 @@ from utils import ErrorManager, ErrorEnum
 
 from utils.enums import GenderEnum
 from utils.validation import validation_request
+from utils import schemas
+
+schema = {
+    'type': {
+        'type': 'string',
+        'allowed': ['popular', 'all', 'base'],
+        'required': False
+    }
+}
 
 
 @app.route('/api/<api_version>/categories/get_categories', methods=['GET'])

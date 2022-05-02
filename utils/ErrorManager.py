@@ -25,7 +25,7 @@ class ErrorManager:
     @staticmethod
     def get(err_type: ErrorEnum, msg: str = None) -> Dict:
         res = ErrorManager.errors.get(err_type, ErrorManager.errors.get(ErrorEnum.UNKNOWN))
-        res['msg'] = res if msg is None else msg
+        res['msg'] = res['msg'] if msg is None else msg
         return res
 
     @staticmethod

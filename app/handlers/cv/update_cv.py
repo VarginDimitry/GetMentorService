@@ -13,8 +13,39 @@ from utils.enums import GenderEnum
 from utils.validation import validation_request
 
 
+schema = {
+    "cv_id": {'type': 'string', 'required': False, 'maxlength': 37},
+    "category": {'type': 'string', 'required': False, 'maxlength': 520},
+    "skills": {
+        'type': 'list',
+        'required': False,
+        'schema': {
+            'type': 'dict',
+            'required': False,
+            'schema': {
+                "grade": {
+                    'type': 'integer',
+                    'allowed': list(range(11)),
+                    'required': True,
+                },
+                "name": {
+                    'type': 'string',
+                    'maxlength': 520,
+                    'required': True,
+                },
+                "category": {
+                    'type': 'string',
+                    'maxlength': 520,
+                    'required': True,
+                }
+            }
+        }
+    }
+}
+
+
 @app.route('/api/<api_version>/cv/update_cv', methods=['PATCH'])
-@validation_request(with_token=True)
+@validation_request(schema=schema, with_token=True)
 def update_cv(api_version):
     request_body: dict = request.json
     payload = UserModel.decode_token(request.headers['Authorization'])

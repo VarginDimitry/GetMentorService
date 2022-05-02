@@ -13,9 +13,13 @@ from utils import ErrorManager
 from utils.enums import GenderEnum, ErrorEnum, TokenType
 from utils.validation import validation_request
 
+schema = {
+    'refreshToken': {'type': 'string', 'required': False, 'maxlength': 520}
+}
+
 
 @app.route('/api/<api_version>/auth/refresh_token', methods=['GET'])
-@validation_request(with_token=True)
+@validation_request(schema=schema, with_token=True)
 def refresh_token(api_version):
     request_body: dict = request.json
 

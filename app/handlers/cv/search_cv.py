@@ -16,16 +16,44 @@ from utils import ErrorManager, ErrorEnum
 
 from utils.enums import GenderEnum, SortType, CVSortRow
 from utils.validation import validation_request
+from utils.schemas import int_filter_schema
+
+schema = {
+    'search_text': {'type': 'string', 'required': False, 'maxlength': 520},
+    "limit": {'type': 'integer', 'required': False},
+    "offset": {'type': 'integer', 'required': False},
+    "sort_by": {
+        "type": 'dict',
+        'required': False,
+        'schema': {
+            "row": {'type': 'string', 'allowed': ['date_time_add', 'category'], 'required': True},
+            "order": {'type': 'string', 'allowed': ["DESC", "ASC"], 'required': True},
+        }
+    },
+    'filter': {
+        'type': 'dict',
+        'required': False,
+        'schema': {
+            'skill_num': int_filter_schema,
+            'categories': {'type': 'list', 'required': False},
+            'user_id': {'type': 'string', 'required': False, 'maxlength': 37},
+            'click_count': int_filter_schema,
+            'date_time_add': int_filter_schema,
+        },
+    }
+}
 
 
 @app.route('/api/<api_version>/cv/search_cv', methods=['GET'])
-@validation_request(with_token=False)
+@validation_request(schema=schema, with_token=False)
 def search_cv(api_version):
     request_body: dict = request.json
-    filters: dict = request_body.get('filters', {})
+
+    filters: dict = request_body.get('filter', {})
     sort_by: dict = request_body.get('sort_by', {})
     limit: int = request_body.get('limit', 20)
     offset: int = request_body.get('offset', 0)
+    search_text: str = request_body.get('search_text')
 
     sort = [(
         sort_by.get('sort_row', 'date_time_add'),
@@ -33,10 +61,9 @@ def search_cv(api_version):
     )]
 
     filter_ = get_filters(filters)
-    if request_body.get('search_text'):
-        filter_ = get_search_filter(request_body.get('search_text')) | filter_
+    if search_text:
+        filter_ = get_search_filter(search_text) | filter_
 
-    filter_.pop('is_hidden', '')
     # print(f"{limit=}\n{offset=}\n{sort}")
     pprint(filter_)
     cvs: List[Dict] = list(CVModel.coll.find(
@@ -52,27 +79,35 @@ def search_cv(api_version):
 def get_filters(filters: dict) -> dict:
     filter_ = {'is_hidden': False}
     if filters.get('skill_num'):
-        skill_num: Union[Dict[str, int], int] = filters.get('skill_num')
-        if isinstance(skill_num, int):
-            filter_['cv_skills'] = {'$size': skill_num}
+        skill_num: Dict[str, int] = filters.get('skill_num')
+        if skill_num.get('eq'):
+            filter_['cv_skills'] = {'$size': skill_num.get('eq')}
         else:
             where = f"this.cv_skills.length >= {skill_num.get('from', 0)}"
             if skill_num.get('to'):
                 where = f"{where} || this.cv_skills.length >= {skill_num.get('to')}"
             filter_['$where'] = where
-    if filters.get('categories'):
-        filter_['categories'] = filters.get('categories')
+    if filters.get('categories') is not None:
+        filter_['category'] = {'$in': filters.get('categories')}
     if filters.get('user_id'):
         filter_['user_id'] = filters.get('user_id')
     if filters.get('click_count'):
-        filter_['click_count'] = filters.get('click_count')
+        click_count: Dict[str, int] = filters.get('click_count')
+        if click_count.get('eq'):
+            filter_['click_count']: int = click_count.get('eq')
+        else:
+            filter_['click_count']: dict = {
+                '$gte': click_count.get('from', 0)
+            }
+            if click_count.get('to'):
+                filter_['click_count']['$lte'] = click_count.get('to')
     if filters.get('date_time_add'):
-        date_time_add: Union[Dict[str, int], int] = filters.get('date_time_add')
-        if isinstance(date_time_add, int):
-            filter_['date_time_add'] = date_time_add
+        date_time_add: Dict[str, int] = filters.get('date_time_add')
+        if date_time_add.get('eq'):
+            filter_['date_time_add'] = date_time_add.get('eq')
         else:
             filter_['date_time_add'] = {
-                '$gte': date_time_add.get('from')
+                '$gte': date_time_add.get('from', 0)
             }
             if date_time_add.get('to'):
                 filter_['skill_num']['$lte'] = date_time_add.get('to')

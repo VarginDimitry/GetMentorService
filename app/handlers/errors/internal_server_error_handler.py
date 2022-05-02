@@ -9,7 +9,10 @@ from app import app
 from utils import ErrorManager, ErrorEnum
 
 
-@app.errorhandler(500)
-def internal_server_error_handler(e):
-    print(type(e))
-    return ErrorManager.get_res(ErrorEnum.INTERNAL_SERVER_ERROR, )
+@app.errorhandler(Exception)
+def internal_server_error_handler(e: Exception):
+    pprint(e)
+    return ErrorManager.get_res(
+        ErrorEnum.INTERNAL_SERVER_ERROR,
+        e.args[0]
+    )
