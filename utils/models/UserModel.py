@@ -19,12 +19,12 @@ class UserModel(BaseModel):
     coll: Collection = BaseModel.conn.user
 
     def __init__(self,
+                 email: str,
                  first_name: str,
-                 middle_name: str,
                  last_name: str,
-                 gender: Union[GenderEnum, str],
                  password: str,
-                 email: str = None,
+                 gender: Union[GenderEnum, str] = GenderEnum.MALE,
+                 middle_name: str = None,
                  phone: str = None,
                  telegram_profile: str = None,
                  is_admin=False,

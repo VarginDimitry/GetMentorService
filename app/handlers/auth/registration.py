@@ -15,8 +15,7 @@ from utils.models import UserModel
 @app.route('/api/<api_version>/auth/registration', methods=['POST'])
 def registration(api_version):
     request_body: dict = request.json
-    pprint(request_body)
     user = UserModel.get_from_dict(request_body)
     res = user.save()
-    return user.to_dict() if 'error' not in res else res
+    return user.to_dict() if 'error' not in res else ErrorManager.get_res(ErrorEnum.BAD_REQUEST, msg=res['error'])
 

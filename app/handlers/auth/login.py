@@ -16,7 +16,6 @@ from utils.ErrorManager import ErrorEnum, ErrorManager
 @app.route('/api/<api_version>/auth/login', methods=['GET', 'POST'])
 def login(api_version):
     request_body: dict = request.json
-    pprint(request_body)
     find_by = {
         'id_': request_body.get('id_'),
         'email': request_body.get('email'),
