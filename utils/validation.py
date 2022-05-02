@@ -3,7 +3,7 @@ from pprint import pprint
 
 from flask import request
 
-from app import UserModel
+from utils.models import UserModel
 from utils import ErrorManager, ErrorEnum
 
 

@@ -6,8 +6,8 @@ from flask import request, make_response, jsonify
 from sqlalchemy.exc import IntegrityError
 import json
 
-from app import app, db
-from app.models.user import UserModel
+from app import app
+from utils.models import UserModel
 
 from utils.enums import GenderEnum, TokenType
 from utils.ErrorManager import ErrorEnum, ErrorManager
@@ -16,9 +16,12 @@ from utils.ErrorManager import ErrorEnum, ErrorManager
 @app.route('/api/<api_version>/auth/login', methods=['GET', 'POST'])
 def login(api_version):
     request_body: dict = request.json
-    user: UserModel = UserModel.query.filter(
-        UserModel.email == request_body.get('email')
-    ).first()
+    pprint(request_body)
+    find_by = {
+        'id_': request_body.get('id_'),
+        'email': request_body.get('email'),
+    }
+    user: UserModel = UserModel.get_from_db(**find_by)
     if user:
         if user.assert_password(request_body.get('password')):
             return {

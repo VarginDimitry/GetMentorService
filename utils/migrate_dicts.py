@@ -34,7 +34,7 @@ if __name__ == '__main__':
     db = SQLAlchemy(app)
     app.config.from_object('utils.configs.LocalConfig')
     folder_path = app.config.get('RES_DIR')
-    from app.models import *
+    from app._models import *
 
     migrate = Migrate(app, db)
     main()

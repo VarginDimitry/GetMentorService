@@ -2,11 +2,10 @@ from pprint import pprint
 from typing import List
 
 from flask import request, make_response, jsonify
-from sqlalchemy.exc import IntegrityError
 import json
 
-from app import app, db
-from app.models import UserModel, CVModel, CVSkillModel, CVTimeModel
+from app import app
+from utils.models import UserModel, CVModel
 from utils import ErrorManager, ErrorEnum
 
 from utils.enums import GenderEnum
@@ -18,23 +17,18 @@ from utils.validation import validation_request
 def create_cv(api_version):
     request_body: dict = request.json
     payload = UserModel.decode_token(request.headers['Authorization'])
-    user: UserModel = UserModel.query.get(payload['id'])
-
-    cv = CVModel(user_id=user.id)
-    db.session.add(cv)
-    db.session.commit()
+    user: UserModel = UserModel.get_from_db(id_=payload['id'])
 
     skills = [
-        CVSkillModel(
-            cv_id=cv.id,
-            grade=skill.get('grade', 0),
-            name=skill.get('name'),
-            category=skill.get('category')
-        )
+        CVModel.SkillModel(**skill)
         for skill in request_body.get('skills')
     ]
+    cv = CVModel(
+        user_id=user.id_,
+        category=request_body.get('categories'),
+        cv_skills=skills,
+        cv_times=[]
+    )
+    cv.save()
 
-    db.session.bulk_save_objects(skills)
-    db.session.commit()
-
-    return {'msg': 'ok', 'inserted': cv.to_dict}, 200
+    return {'msg': 'ok', 'inserted': cv.to_dict()}, 200

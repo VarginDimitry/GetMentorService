@@ -5,11 +5,10 @@ from flask import request, make_response, jsonify
 from sqlalchemy.exc import IntegrityError
 import json
 
-from app import app, db
-from app.models.user import UserModel
+from app import app
+from utils.models import UserModel
 from utils import ErrorManager, ErrorEnum
 
-from utils.enums import GenderEnum
 from utils.validation import validation_request
 
 
@@ -17,6 +16,8 @@ from utils.validation import validation_request
 @validation_request(with_token=True)
 def get_me(api_version):
     payload = UserModel.decode_token(request.headers['Authorization'])
-    user: UserModel = UserModel.query.get(payload['id'])
-    res_user = None if user is None else user.to_json_res
-    return {'user': res_user}, 200
+    user: UserModel = UserModel.get_from_db(id_=payload['id'])
+    if user:
+        return {'user': user.to_dict(with_cvs=True)}, 200
+    else:
+        return ErrorManager.get_res(ErrorEnum.NOT_FOUND, "")

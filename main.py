@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from app import app, db
+from app import app
 from app.handlers import *
 from utils import ErrorManager
 

@@ -25,7 +25,7 @@ class BaseSkillModel(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'category': self.category,
+            'categories': self.category,
         }
 
 

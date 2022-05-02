@@ -21,6 +21,12 @@ class Config:
 
     RES_DIR = './res'
 
+    MONGO_CONFIG = {
+        "host": "localhost",
+        "port": 27017,
+        "db": "gms",
+    }
+
 
 class LocalConfig(Config):
     DB_SERVER = 'localhost'

@@ -1,3 +1,4 @@
+from .categories import *
 from .dict import *
 from .auth import *
 from .user import *

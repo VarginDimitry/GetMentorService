@@ -5,7 +5,6 @@ import flask_sqlalchemy
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from app import db
 from utils.enums import TimeTypeEnum
 from .dict import BaseSkillModel
 
@@ -44,16 +43,6 @@ class CVModel(db.Model):
             'dateTimeAdd': self.dateTimeAdd,
         }
 
-    def to_dict_(self):
-        return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'cv_skills': [s.to_dict for s in self.cv_skills],
-            'cv_times': [t.to_dict for t in self.cv_times],
-            'isHidden': self.is_hidden,
-            'dateTimeAdd': self.dateTimeAdd,
-        }
-
 
 class CVSkillModel(db.Model):
     query: flask_sqlalchemy.BaseQuery
@@ -62,7 +51,7 @@ class CVSkillModel(db.Model):
     __table_args__ = (
         db.UniqueConstraint(
             'name',
-            'category',
+            'categories',
             'cv_id',
             name='unique_cv_skill'
         ),
@@ -93,7 +82,7 @@ class CVSkillModel(db.Model):
             self.name = name
             self.category = category
         else:
-            raise ValueError("You must use one of these constructors: by BaseSkills and by name and category")
+            raise ValueError("You must use one of these constructors: by BaseSkills and by name and categories")
 
     def update(self, cv_id: int = None, name: str = None, category: str = None, grade: int = None,
                is_hidden: bool = None):
@@ -110,7 +99,7 @@ class CVSkillModel(db.Model):
             'id': self.id,
             'cv_id': self.cv_id,
             'name': self.name,
-            'category': self.category,
+            'categories': self.category,
             'grade': self.grade,
             'dateTimeAdd': self.dateTimeAdd.timestamp().__int__(),
         }
