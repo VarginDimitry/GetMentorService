@@ -21,15 +21,15 @@ class Config:
     RES_DIR = './res'
 
     MONGO_CONFIG = {
-        "host": "mongodb://mongodb:27017",
-        "port": 27018,
+        "host": "localhost",
+        "port": 27017,
         "db": "gms",
     }
 
 
 class DockerConfig(Config):
     MONGO_CONFIG = {
-        "host": "localhost",
+        "host": "mongodb://mongodb",
         "port": 27017,
         "db": "gms",
     }
