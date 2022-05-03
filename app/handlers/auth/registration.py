@@ -38,6 +38,6 @@ def registration(api_version):
     request_body: dict = request.json
     user = UserModel.get_from_dict(request_body)
     res = user.save()
-    return user.to_dict() \
+    return ErrorManager.get_res(ErrorEnum.CONFLICT, msg=res['error'])\
         if res.get('error') else\
-        ErrorManager.get_res(ErrorEnum.CONFLICT, msg=res['error'])
+        user.to_dict()
