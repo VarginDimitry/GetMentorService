@@ -1,9 +1,4 @@
-from pprint import pprint
-from typing import List
-
-from flask import request, make_response, jsonify
-import json
-
+from flask import request, jsonify
 from pymongo.collection import Collection
 
 from app import app

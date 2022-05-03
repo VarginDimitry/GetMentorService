@@ -1,13 +1,9 @@
 import json
-from typing import List, Dict
+import os
 
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
-import os
-
-from sqlalchemy.orm import Query
 
 db: SQLAlchemy = None
 folder_path = ''

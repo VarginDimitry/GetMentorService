@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+    getmentorservice:
+        image: getmentorservice
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/inner_docker
+        networks:
+            - pr
+        ports:
+            - "5000:5000"
+        depends_on:
+            -   mongodb
+
+    mongodb:
+        image: mongo:5.0.6
+        environment:
+            - MONGO_DATA_DIR=/data/db
+        #    - MONGO_LOG_DIR=/dev/null
+        #    - MONGO_INITDB_DATABASE=userservice
+        #    - MONGO_INITDB_ROOT_USERNAME=admin
+        #    - MONGO_INITDB_ROOT_PASSWORD=admin
+        volumes:
+        #    - ./data/mongo/001_users.js:/docker-entrypoint-initdb.d/001_users.js:ro
+            - ./db:/data/db
+        networks:
+            - pr
+
+
+networks:
+  pr:
+    driver: bridge

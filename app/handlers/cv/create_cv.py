@@ -1,16 +1,8 @@
-from pprint import pprint
-from typing import List
-
-from flask import request, make_response, jsonify
-import json
+from flask import request
 
 from app import app
 from utils.models import UserModel, CVModel
-from utils import ErrorManager, ErrorEnum
-
-from utils.enums import GenderEnum
 from utils.validation import validation_request
-
 
 schema = {
     "category": {'type': 'string', 'required': False, 'maxlength': 520},

@@ -1,22 +1,15 @@
 import re
 import string
 from pprint import pprint
-from typing import List, Dict, Union
+from typing import List, Dict
 
 import pymongo
-import sqlalchemy
-from flask import request, make_response, jsonify
-import flask_sqlalchemy
-from sqlalchemy import text, func
-import json
+from flask import request
 
 from app import app
-from utils.models import UserModel, CVModel
-from utils import ErrorManager, ErrorEnum
-
-from utils.enums import GenderEnum, SortType, CVSortRow
-from utils.validation import validation_request
+from utils.models import CVModel
 from utils.schemas import int_filter_schema
+from utils.validation import validation_request
 
 schema = {
     'search_text': {'type': 'string', 'required': False, 'maxlength': 520},

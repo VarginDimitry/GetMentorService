@@ -1,16 +1,11 @@
 from datetime import timedelta, datetime
-from pprint import pprint
-from typing import List
 
-from flask import request, make_response, jsonify
-from sqlalchemy.exc import IntegrityError
-import json
+from flask import request
 
 from app import app
-from utils.models import UserModel
 from utils import ErrorManager
-
-from utils.enums import GenderEnum, ErrorEnum, TokenType
+from utils.enums import ErrorEnum, TokenType
+from utils.models import UserModel
 from utils.validation import validation_request
 
 schema = {

@@ -13,7 +13,6 @@ class Config:
     DB_SERVER = 'localhost'
     DB_PORT = '5432'
     DB_NAME = 'gms'
-    a = DB_NAME
     DATABASE_URI = SQLALCHEMY_DATABASE_URI = f"{DB_ENGINE}://{DB_USER_NAME}:{DB_USER_PASSWORD}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
 
     ACCESS_TOKEN_LIFE  = 100000  # minutes
@@ -22,16 +21,19 @@ class Config:
     RES_DIR = './res'
 
     MONGO_CONFIG = {
+        "host": "mongodb://mongodb:27017",
+        "port": 27018,
+        "db": "gms",
+    }
+
+
+class DockerConfig(Config):
+    MONGO_CONFIG = {
         "host": "localhost",
         "port": 27017,
         "db": "gms",
     }
 
 
-class LocalConfig(Config):
-    DB_SERVER = 'localhost'
-
-
 class ProductionConfig(Config):
-    """Uses production database server."""
-    DB_SERVER = '192.168.19.32'
+    pass
