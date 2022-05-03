@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 
 EXPOSE 5000 5000
 
-CMD [ "python", "/GetMentorService/main.py" ]
+CMD [ "python", "/GetMentorService/main.py", "--config_name", "DockerConfig" ]

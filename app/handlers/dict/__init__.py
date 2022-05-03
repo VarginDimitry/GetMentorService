@@ -1,1 +1,1 @@
-from .dict_base_skills import dict_base_skills
+from .base_skills import base_skills

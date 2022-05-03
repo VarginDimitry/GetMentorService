@@ -1,14 +1,8 @@
-from pprint import pprint
-from typing import List
-
-from flask import request, make_response, jsonify
-from sqlalchemy.exc import IntegrityError
-import json
+from flask import request
 
 from app import app
-from utils.models import UserModel
 from utils import ErrorManager, ErrorEnum
-
+from utils.models import UserModel
 from utils.validation import validation_request
 
 
