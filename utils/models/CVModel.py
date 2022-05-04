@@ -76,7 +76,10 @@ class CVModel(BaseModel):
     def get_from_db(id_: str, user_id: str = None):
         query = {'id_': id_}
         if user_id:
-            query['user_id'] = user_id
+            query['$or'] = [
+                {'id_': user_id},
+                {'is_hidden': False}
+            ]
 
         db_res = CVModel.coll.find_one(
             query,

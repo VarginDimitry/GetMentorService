@@ -10,7 +10,7 @@ class MongoConnector:
     __mongo_port: int = None
     __mongo_db: str = None
 
-    def __new__(cls):
+    def __new__(cls) -> Database:
         if not hasattr(cls, 'instance'):
             setattr(cls, 'instance', cls.create_connection())
         return getattr(cls, 'instance')

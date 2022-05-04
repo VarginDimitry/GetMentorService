@@ -1,16 +1,28 @@
 import json
 import pathlib
+from pprint import pprint
 from typing import Dict, List
 
+import requests
 from pymongo import UpdateOne
 from pymongo.collection import Collection
+from pymongo.database import Database
 
 from app import app
 from utils.MongoConnector import MongoConnector
+from utils.models import UserModel
 
-
-conn = MongoConnector()
+conn: Database = MongoConnector()
 res_dir = pathlib.Path(__file__).parent.parent.parent / 'res'
+
+
+def clear_db():
+    collections = conn.list_collection_names()
+    delete_count = {}
+    for collection in collections:
+        delete_count[collection] = conn[collection].delete_many({}).deleted_count
+    print('Delete count:')
+    pprint(delete_count)
 
 
 def gen_base_skills():
@@ -26,4 +38,5 @@ def gen_base_skills():
 
 
 if __name__ == '__main__':
+    clear_db()
     gen_base_skills()

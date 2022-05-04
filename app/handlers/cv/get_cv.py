@@ -6,10 +6,11 @@ from utils.models import UserModel, CVModel
 from utils.validation import validation_request
 
 
-@app.route('/api/<api_version>/cv/get_cv/<cv_id>', methods=['GET'])
+@app.route('/api/<api_version>/cv/get_cv/', methods=['GET'])
 @validation_request(with_token=True)
-def get_cv(api_version: str, cv_id: str):
+def get_cv(api_version: str):
     payload = UserModel.decode_token(request.headers['Authorization'])
+    cv_id = request.args['cv_id']
 
     cv = CVModel.get_from_db(
         id_=cv_id,

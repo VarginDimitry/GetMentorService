@@ -42,11 +42,8 @@ def update_cv(api_version):
     request_body: dict = request.json
     payload = UserModel.decode_token(request.headers['Authorization'])
     user: UserModel = UserModel.get_from_db(payload['id'])
-    cv: CVModel = CVModel.get_from_db(
-        id_=request_body.get('cv_id'),
-        user_id=payload['id'],
-    )
-    if not cv:
+    cv: CVModel = CVModel.get_from_db(id_=request_body.get('cv_id'))
+    if not cv or user.id_ != cv.user_id:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, "CV has not found")
 
     cv.update(

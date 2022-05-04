@@ -9,7 +9,7 @@ services:
         volumes:
             - .:/inner_docker
         networks:
-            - pr
+            - gms
         ports:
             - "5000:5000"
         depends_on:
@@ -27,9 +27,9 @@ services:
         #    - ./data/mongo/001_users.js:/docker-entrypoint-initdb.d/001_users.js:ro
             - ./db:/data/db
         networks:
-            - pr
+            - gms
 
 
 networks:
-  pr:
-    driver: bridge
+    gms:
+        driver: bridge

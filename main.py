@@ -19,6 +19,7 @@ parser.add_argument(
 def main():
     argv = parser.parse_args()
     app.config.from_object(f'utils.configs.{argv.config_name}')
+    print(f"Config name: {argv.config_name}")
     ErrorManager.init_class()
 
 

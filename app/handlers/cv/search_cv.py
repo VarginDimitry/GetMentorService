@@ -59,10 +59,35 @@ def search_cv(api_version):
 
     # print(f"{limit=}\n{offset=}\n{sort}")
     pprint(filter_)
-    cvs: List[Dict] = list(CVModel.coll.find(
-        filter_,
-        {'_id': 0}
-    ).sort(sort).limit(limit).skip(offset))
+    cvs: List[Dict] = list(CVModel.coll.aggregate([
+        {
+            '$match': filter_
+        },
+        {
+            '$sort': {
+                row: order
+                for row, order in sort
+            }
+        },
+        {
+            "$lookup": {
+                "from": 'user',
+                'localField': 'user_id',
+                'foreignField': 'id_',
+                'as': 'user'
+            }
+        },
+        {'$skip': offset},
+        {'$limit': limit},
+        {'$project': {'_id': 0}},
+    ]))
+    for cv in cvs:
+        cv['user'] = cv.get('user')[0]
+        cv.get('user').pop('_id', None)
+    # cvs: List[Dict] = list(CVModel.coll.find(
+    #     filter_,
+    #     {'_id': 0}
+    # ).sort(sort).limit(limit).skip(offset))
     return {
                'msg': 'ok',
                'cvs': cvs
