@@ -80,6 +80,32 @@ class UserModel(BaseModel):
             UserModel.coll.insert_one(self.to_dict())
             return self.to_dict()
 
+    def update(self, set_dict: dict):
+        if UserModel.coll.count_documents({
+            '$or': [
+                {'id_': self.id_},
+                {'email': self.email},
+            ]
+        }) == 0:
+            return {'error': 'User with this data doesn\'t exists'}
+        else:
+            UserModel.coll.update_one(
+                {'id_': self.id_},
+                {'$set': set_dict},
+                upsert=False
+            )
+            self.email = set_dict.get('email', self.email)
+            self.phone = set_dict.get('phone', self.phone)
+            self.gender = GenderEnum(set_dict.get('gender', self.gender.value))
+            self.is_admin = set_dict.get('is_admin', self.is_admin)
+            self.first_name = set_dict.get('first_name', self.first_name)
+            self.middle_name = set_dict.get('middle_name', self.middle_name)
+            self.last_name = set_dict.get('last_name', self.last_name)
+            self.telegram_profile = set_dict.get('telegram_profile', self.telegram_profile)
+
+            return self.to_dict()
+
+
     def to_dict(self, with_cvs=False) -> dict:
         res = {
             'id_': self.id_,
