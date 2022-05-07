@@ -16,7 +16,7 @@ schema = {
 
 
 @app.route('/api/<api_version>/categories/get_categories', methods=['GET'])
-@validation_request(with_token=True)
+@validation_request(with_token=False)
 def get_categories(api_version: str):
     categories_type: str = request.args.get('type')
     base_categories = ['backend', 'frontend', 'android', 'ios', 'devops', 'design']

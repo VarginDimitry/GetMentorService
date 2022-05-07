@@ -13,7 +13,7 @@ schema = {
 
     "email": schemas.email_schema,
 
-    "phone": schemas.phone_schema,
+    "phone": schemas.phone_schema | {'nullable': True},
     "telegram_profile": {
         'type': 'string',
         'regex': r'.*\B@(?=\w{5,32}\b)[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*.*',
@@ -35,4 +35,4 @@ def update_me(api_version):
     res = user.update(request_body)
     return ErrorManager.get_res(ErrorEnum.CONFLICT, msg=res['error'])\
         if res.get('error') else\
-        user.to_dict()
+        {'user': user.to_dict(with_cvs=True)}, 200
