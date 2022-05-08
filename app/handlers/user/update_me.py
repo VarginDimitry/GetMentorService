@@ -11,7 +11,7 @@ schema = {
     "last_name": {'type': 'string', 'required': True, 'maxlength': 128},
     "gender": {'type': 'string', 'allowed': ['M', 'F'], 'required': False},
 
-    "email": schemas.email_schema,
+    "email": schemas.email_schema | {'required': False},
 
     "phone": schemas.phone_schema | {'nullable': True},
     "telegram_profile": {

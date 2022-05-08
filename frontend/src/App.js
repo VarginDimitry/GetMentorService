@@ -2,92 +2,37 @@ import {useState} from "react";
 
 function App() {
     let [time, setTime] = useState(0)
-    let email = "var2qaik.boom@gmail.com";
-    let password = "qwe321";
-  // const registration = () => {
-  //     fetch("/api/v1/auth/registration", {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //             "Access-Control-Allow-Origin": "*",
-  //             "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-  //             "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With"
-  //         },
-  //         body: JSON.stringify({
-  //           "first_name": "Dmitry",
-  //           "last_name": "Vargin",
-  //           "gender": "M",
-  //
-  //           "email": email,
-  //           "password": password,
-  //
-  //           "phone": "+79960653096",
-  //           "telegram_profile": "@dmitry_vargin",
-  //           "middle_name": "Alexandrovich"
-  //         })
-  //     }).then((response) => {
-  //         response.json().then((body) => {
-  //             console.log("reg", body)
-  //         })
-  //     })
-  // }
-  //
-  // const login = () => {
-  //     fetch("http://localhost:5000/api/v1/auth/login", {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       "email": email,
-  //       "password": password
-  //   })
-  //     }).then((response) => {
-  //         response.json().then((body) => {
-  //             console.log("login", body)
-  //         })
-  //     })
-  // }
-  //
-  // registration()
-  //   login()
-  //
-  // const get_cvs = () => {
-  //     fetch("http://localhost:5000/api/v1/cv/search_cv", {
-  //         method: "POST",
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //         body: JSON.stringify({
-  //           "limit": 100,
-  //           "offset": 0,
-  //           "sort_by": {
-  //               "row": "skill_num",
-  //               "order": "DESC"
-  //           },
-  //           "filters": {
-  //               "skill_num": {
-  //                   "from": 5
-  //               }
-  //           }
-  //       })
-  //     }).then((response) => {
-  //         response.json().then((body) => {
-  //             console.log(body)
-  //         })
-  //     })
-  // }
-  // get_cvs();
-  const get_time = () => {
-      fetch("/time", {
-          method: "GET",
+    // let email = "var2qaik.boom@gmail.com";
+    // let password = "qwe321";
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTgwMzI1NjMsImlhdCI6MTY1MjAzMjU2MywiaWQiOiIzNzg1NjQxNS0zNmMxLTQwMDAtOTlmNS0wODU1MDY0MWJkYWUiLCJlbWFpbCI6ImRpbWEzQGdtYWlsLmNvbSJ9.oDp-Q_FV_3DrgsgrNhpdpb-y7DeTtk_jVmhBX6uTLlw'
+  const update_me = () => {
+      fetch("/api/v1/user/update_me", {
+          method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+          body: JSON.stringify({
+                "first_name": "Dmitry",
+                "last_name": "Suchek"
+            })
       }).then((response) => {
           response.json().then((body) => {
-              setTime(body['time'])
+              console.log(body)
           })
       })
   }
-  get_time()
+  update_me();
+  // const get_time = () => {
+  //     fetch("/time", {
+  //         method: "GET",
+  //     }).then((response) => {
+  //         response.json().then((body) => {
+  //             setTime(body['time'])
+  //         })
+  //     })
+  // }
+  // get_time()
 
   return (
     <div className="App">
