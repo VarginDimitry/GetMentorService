@@ -13,11 +13,11 @@ from utils.ErrorManager import ErrorEnum, ErrorManager
 from utils import schemas
 from utils.validation import validation_request
 
-
 schema = {
     'email': schemas.email_schema,
     'password': schemas.password_schema,
 }
+
 
 @app.route('/api/<api_version>/auth/login', methods=['GET', 'POST'])
 @validation_request(schema=schema, with_token=False)
@@ -31,11 +31,13 @@ def login(api_version):
     if user:
         if user.assert_password(request_body.get('password')):
             return {
-                'accessToken': user.encode_token(TokenType.ACCESS),
-                'accessExp': (datetime.utcnow() + timedelta(minutes=app.config.get('ACCESS_TOKEN_LIFE'))).timestamp().__int__(),
-                'refreshToken': user.encode_token(TokenType.REFRESH),
-                'refreshExp': (datetime.utcnow() + timedelta(minutes=app.config.get('REFRESH_TOKEN_LIFE'))).timestamp().__int__(),
-            }, 200
+                       'accessToken': user.encode_token(TokenType.ACCESS),
+                       'accessExp': (datetime.utcnow() + timedelta(
+                           minutes=app.config.get('ACCESS_TOKEN_LIFE'))).timestamp().__int__(),
+                       'refreshToken': user.encode_token(TokenType.REFRESH),
+                       'refreshExp': (datetime.utcnow() + timedelta(
+                           minutes=app.config.get('REFRESH_TOKEN_LIFE'))).timestamp().__int__(),
+                   }, 200
         else:
             return ErrorManager.get_res(ErrorEnum.BAD_REQUEST, msg='Password is incorrect')
     else:

@@ -37,7 +37,7 @@ schema = {
 }
 
 
-@app.route('/api/<api_version>/cv/search_cv', methods=['GET'])
+@app.route('/api/<api_version>/cv/search_cv', methods=['POST'])
 @validation_request(schema=schema, with_token=False)
 def search_cv(api_version):
     request_body: dict = request.json

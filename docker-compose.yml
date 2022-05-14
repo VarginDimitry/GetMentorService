@@ -29,6 +29,20 @@ services:
         networks:
             - gms
 
+#    react:
+#        image: react
+#        build:
+#            context: ./mega_front
+#            dockerfile: Dockerfile_react
+#        volumes:
+#            - .:/inner_docker
+#        networks:
+#            - gms
+#        ports:
+#            - "3000:3000"
+#        depends_on:
+#            - mongodb
+
 
 networks:
     gms:

@@ -13,7 +13,7 @@ schema = {
 }
 
 
-@app.route('/api/<api_version>/auth/refresh_token', methods=['GET'])
+@app.route('/api/<api_version>/auth/refresh_token', methods=['POST'])
 @validation_request(schema=schema, with_token=True)
 def refresh_token(api_version):
     request_body: dict = request.json
