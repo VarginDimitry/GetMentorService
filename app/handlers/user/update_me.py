@@ -7,8 +7,8 @@ from utils.models import UserModel
 from utils.validation import validation_request
 
 schema = {
-    "first_name": {'type': 'string', 'required': True, 'maxlength': 128},
-    "last_name": {'type': 'string', 'required': True, 'maxlength': 128},
+    "first_name": {'type': 'string', 'required': False, 'maxlength': 128},
+    "last_name": {'type': 'string', 'required': False, 'maxlength': 128},
     "gender": {'type': 'string', 'allowed': ['M', 'F'], 'required': False},
 
     "email": schemas.email_schema | {'required': False},
@@ -20,7 +20,8 @@ schema = {
         'required': False,
         'maxlength': 128
     },
-    "middle_name": {'type': 'string', 'required': False, 'maxlength': 128}
+    "middle_name": {'type': 'string', 'required': False, 'maxlength': 128},
+    "about_me": {'type': 'string', 'required': False, 'maxlength': 1024},
 }
 
 

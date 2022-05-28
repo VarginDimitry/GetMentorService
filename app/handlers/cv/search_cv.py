@@ -57,8 +57,6 @@ def search_cv(api_version):
     if search_text:
         filter_ = get_search_filter(search_text) | filter_
 
-    # print(f"{limit=}\n{offset=}\n{sort}")
-    pprint(filter_)
     cvs: List[Dict] = list(CVModel.coll.aggregate([
         {
             '$match': filter_

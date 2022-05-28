@@ -30,6 +30,7 @@ class UserModel(BaseModel):
                  is_admin=False,
                  date_time_add=None,
                  id_: str = None,
+                 about_me: str = None,
                  **kwargs):
         self.id_: str = id_
 
@@ -43,6 +44,7 @@ class UserModel(BaseModel):
         self.phone: str = phone
         self.telegram_profile: str = telegram_profile
         self.is_admin: bool = is_admin
+        self.about_me: str = about_me
 
         self.date_time_add: int = date_time_add
 
@@ -102,9 +104,9 @@ class UserModel(BaseModel):
             self.middle_name = set_dict.get('middle_name', self.middle_name)
             self.last_name = set_dict.get('last_name', self.last_name)
             self.telegram_profile = set_dict.get('telegram_profile', self.telegram_profile)
+            self.about_me = set_dict.get('about_me', self.about_me)
 
             return self.to_dict()
-
 
     def to_dict(self, with_cvs=False) -> dict:
         res = {
@@ -118,7 +120,8 @@ class UserModel(BaseModel):
             'phone': self.phone,
             'telegram_profile': self.telegram_profile,
             'date_time_add': self.date_time_add,
-            'is_admin': self.is_admin
+            'is_admin': self.is_admin,
+            'about_me': self.about_me,
         }
         if with_cvs:
             from utils.models import CVModel
