@@ -1,4 +1,4 @@
-class Config:
+class LocalConfig:
     TESTING = False
     TEMPLATES_AUTO_RELOAD = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -19,7 +19,7 @@ class Config:
     }
 
 
-class DockerConfig(Config):
+class DockerConfig(LocalConfig):
     MONGO_HOST = 'mongodb://mongodb:27017'
     MONGO_CONFIG = {
         "host": "mongodb://mongodb",
@@ -28,8 +28,9 @@ class DockerConfig(Config):
     }
 
 
-class TestConfig(Config):
+class TestLocalConfig(LocalConfig):
     TESTING = True
+    MONGO_HOST = 'mongodb://localhost:27017'
     MONGO_CONFIG = {
         "host": "mongodb://localhost",
         "port": 27017,

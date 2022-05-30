@@ -1,20 +1,22 @@
 version: "3.8"
 
 services:
-    getmentorservice:
+    flask:
         image: getmentorservice
         build:
             context: .
             dockerfile: Dockerfile
+        environment:
+          APP_PORT: 5000
         volumes:
             - .:/inner_docker
         networks:
-            - gms
-        ports:
-            - "5000:5000"
-            - "80:5000"
+            - backend
+            - frontend
         depends_on:
             -   mongodb
+#        ports:
+#            - "5000:5000"
 
     mongodb:
         image: mongo:5.0.6
@@ -28,23 +30,37 @@ services:
         #    - ./data/mongo/001_users.js:/docker-entrypoint-initdb.d/001_users.js:ro
             - ./db:/data/db
         networks:
-            - gms
+            - backend
 
-#    react:
-#        image: react
-#        build:
-#            context: ./mega_front
-#            dockerfile: Dockerfile_react
-#        volumes:
-#            - .:/inner_docker
-#        networks:
-#            - gms
-#        ports:
-#            - "3000:3000"
-#        depends_on:
-#            - mongodb
+    webserver:
+        build:
+            context: nginx
+            dockerfile: Dockerfile
+        image: digitalocean.com/webserver:latest
+        container_name: webserver
+        environment:
+            APP_DEBUG: "true"
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - nginxdata:/var/log/nginx
+        depends_on:
+            - flask
+        networks:
+            - frontend
 
 
 networks:
-    gms:
+    backend:
         driver: bridge
+    frontend:
+        driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
+  appdata:
+    driver: local
+  nginxdata:
+    driver: local
