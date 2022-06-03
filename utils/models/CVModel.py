@@ -102,10 +102,6 @@ class CVModel(BaseModel):
                 db_res
             ]
 
-    @staticmethod
-    def get_from_dict(data: dict):
-        return CVModel(**data)
-
     def save(self):
         if CVModel.coll.count_documents({
             'id_': self.id_,

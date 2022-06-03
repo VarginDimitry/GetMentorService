@@ -1,3 +1,4 @@
+from .bids import *
 from .categories import *
 from .dict import *
 from .auth import *

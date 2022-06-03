@@ -9,13 +9,16 @@ class BaseModel:
     conn: Database = MongoConnector()
     coll: Collection = MongoConnector().user
 
+    def __init__(self, **kwargs):
+        raise NotImplemented()
+
     @staticmethod
     def get_from_db(*args, **kwargs):
         raise NotImplemented()
 
-    @staticmethod
-    def get_from_dict(data: dict):
-        raise NotImplemented()
+    @classmethod
+    def get_from_dict(cls, data: dict):
+        return cls(**data)
 
     def save(self):
         raise NotImplemented()
