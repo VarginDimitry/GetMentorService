@@ -8,7 +8,7 @@ from utils.validation import validation_request
 
 schema = {
     'status': {'required': True, 'allowed': [BidStatus.ACCEPTED.value, BidStatus.REJECTED.value]},
-    'to_id': {'required': True, 'type': 'string'}
+    'bid_id': {'required': True, 'type': 'string'}
 }
 
 
@@ -17,9 +17,9 @@ schema = {
 def set_bid_status(api_version):
     request_body: dict = request.json
     payload = UserModel.decode_token(request.headers['Authorization'])
-    bid = BidModel.get_from_db(request_body['to_id'])
-    if not bid:
-        return ErrorManager.get_res(ErrorEnum.NOT_FOUND, f"Bid with this id not found")
+    bid = BidModel.get_from_db(request_body['bid_id'])
+    if not bid or bid.to_id != payload['id']:
+        return ErrorManager.get_res(ErrorEnum.NOT_FOUND, f"User has not this bid")
     upd_res = bid.update({'status': request_body.get('status')})
     if 'error' not in upd_res:
         return {'msg': 'ok', 'bid': upd_res}, 200
