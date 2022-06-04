@@ -68,6 +68,8 @@ class UserModel(BaseModel):
         return UserModel(**data)
 
     def save(self):
+        self.id_ = str(uuid4())
+        self.date_time_add = datetime.now().timestamp().__int__()
         if UserModel.coll.count_documents({
             '$or': [
                 {'id_': self.id_},
@@ -76,8 +78,6 @@ class UserModel(BaseModel):
         }) > 0:
             return {'error': 'User with this data already exists'}
         else:
-            self.id_ = str(uuid4())
-            self.date_time_add = datetime.now().timestamp().__int__()
             self.password = hashlib.sha256(self.password.encode()).hexdigest()
             UserModel.coll.insert_one(self.to_dict())
             return self.to_dict()

@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from flask import request
 
 from app import app
@@ -11,4 +13,8 @@ from utils.validation import validation_request
 @validation_request(with_token=True)
 def get_sent_bids(api_version):
     payload = UserModel.decode_token(request.headers['Authorization'])
-    return BidModel.get_all_by_from_id(payload['id'])
+    pprint(BidModel.get_all_by_from_id(payload['id']))
+    return {
+        "msg": "ok",
+        "bids": BidModel.get_all_by_from_id(payload['id'])
+    }, 200

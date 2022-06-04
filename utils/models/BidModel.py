@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import hashlib
 from enum import Enum
-from typing import Union
+from typing import Union, List
 
 import jwt
 from pymongo.collection import Collection
@@ -48,6 +48,8 @@ class BidModel(BaseModel):
         return BidModel.get_from_dict(res) if res else None
 
     def save(self):
+        self.id_ = self.id_ or str(uuid4())
+        self.date_time_add = self.date_time_add or int(datetime.now().timestamp())
         if BidModel.coll.count_documents({
             'id_': self.id_,
             'from_id': self.from_id,
@@ -55,8 +57,6 @@ class BidModel(BaseModel):
         }) > 0:
             return {'error': 'Bid already send'}
         else:
-            self.id_ = self.id_ or str(uuid4())
-            self.date_time_add = self.date_time_add or int(datetime.now().timestamp())
             BidModel.coll.insert_one(self.to_dict())
             return self.to_dict()
 
@@ -88,7 +88,7 @@ class BidModel(BaseModel):
 
     def to_dict(self) -> dict:
         return {
-            '_id': self.id_,
+            'id_': self.id_,
             'from_id': self.from_id,
             'from_name': self.from_name,
             'to_id': self.to_id,
@@ -100,8 +100,11 @@ class BidModel(BaseModel):
         }
 
     @staticmethod
-    def get_all_by_from_id(from_id: str, as_dicts=True):
-        res = BidModel.coll.find({'from_id': from_id})
+    def get_all_by_from_id(from_id: str, as_dicts=True) -> List:
+        res = BidModel.coll.find(
+            {'from_id': from_id},
+            {'_id': 0}
+        )
         if as_dicts:
             return list(res)
         else:
@@ -109,7 +112,10 @@ class BidModel(BaseModel):
 
     @staticmethod
     def get_all_by_to_id(to_id: str, as_dicts=True):
-        res = BidModel.coll.find({'to_id': to_id})
+        res = BidModel.coll.find(
+            {'to_id': to_id},
+            {'_id': 0}
+        )
         if as_dicts:
             return list(res)
         else:
@@ -117,7 +123,7 @@ class BidModel(BaseModel):
 
     def delete(self):
         return BidModel.coll.delete_one({
-            '_id': self.id_,
+            'id_': self.id_,
             'from_id': self.from_id,
             'to_id': self.to_id,
         })
