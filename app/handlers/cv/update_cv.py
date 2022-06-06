@@ -17,7 +17,7 @@ schema = {
             'schema': {
                 "grade": {
                     'type': 'integer',
-                    'allowed': list(range(11)),
+                    'allowed': ['bad', 'average', 'good'],
                     'required': True,
                 },
                 "name": {

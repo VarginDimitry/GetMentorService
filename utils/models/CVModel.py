@@ -1,7 +1,8 @@
 from collections import namedtuple
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 import hashlib
-from typing import Union, Dict, List
+from typing import Union, Dict, List, Optional
 
 import jwt
 from pymongo import UpdateOne
@@ -19,14 +20,11 @@ class CVModel(BaseModel):
     coll_name = 'cv'
     coll: Collection = BaseModel.conn.cv
 
+    @dataclass
     class SkillModel:
-        def __init__(self, name: str = None,
-                     category: str = None,
-                     grade=0,
-                     **kwargs):
-            self.name = name
-            self.category = category
-            self.grade = grade
+        name: Optional[str] = None
+        category: Optional[str] = None
+        grade: Optional[str] = "average"
 
         def to_dict(self):
             return {
@@ -35,15 +33,8 @@ class CVModel(BaseModel):
                 'grade': self.grade,
             }
 
-    def __init__(self,
-                 user_id: str,
-                 category: str = None,
-                 id_: str = None,
-                 cv_skills: list = None,
-                 cv_times: list = None,
-                 click_count=0,
-                 is_hidden=False,
-                 **kwargs):
+    def __init__(self, user_id: str, category: str = None, id_: str = None, cv_skills: list = None,
+                 cv_times: list = None, click_count=0, is_hidden=False, help_count=0, **kwargs):
         self.id_: str = id_
         self.user_id: str = user_id
         self.category: str = category
@@ -57,6 +48,7 @@ class CVModel(BaseModel):
         self.cv_times: list = cv_times if cv_times else []
 
         self.click_count = click_count
+        self.help_count = help_count
         self.is_hidden = is_hidden
 
         self.date_time_add: int = None
@@ -69,6 +61,7 @@ class CVModel(BaseModel):
             'cv_skills': [x.to_dict() for x in self.cv_skills],
             'cv_times': self.cv_times,
             'is_hidden': self.is_hidden,
+            'help_count': self.help_count,
             'date_time_add': self.date_time_add,
         }
 
@@ -81,18 +74,12 @@ class CVModel(BaseModel):
                 {'is_hidden': False}
             ]
 
-        db_res = CVModel.coll.find_one(
-            query,
-            {'_id': 0}
-        )
+        db_res = CVModel.coll.find_one(query, {'_id': 0})
         return CVModel(**db_res) if db_res else None
 
     @staticmethod
     def get_many_from_db(user_id: str, as_dict=False) -> List:
-        db_res = CVModel.coll.find(
-            {'user_id': user_id},
-            {'_id': 0},
-        )
+        db_res = CVModel.coll.find({'user_id': user_id}, {'_id': 0})
         if as_dict:
             return [dict(x) for x in db_res]
         else:
@@ -103,10 +90,7 @@ class CVModel(BaseModel):
             ]
 
     def save(self):
-        if CVModel.coll.count_documents({
-            'id_': self.id_,
-            'user_id': self.user_id,
-        }) > 0:
+        if CVModel.coll.count_documents({'id_': self.id_, 'user_id': self.user_id}) > 0:
             return {'error': 'User with this data already exists'}
         else:
             self.id_ = str(uuid4())

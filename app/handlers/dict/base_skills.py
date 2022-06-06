@@ -9,8 +9,5 @@ from utils.MongoConnector import MongoConnector
 def base_skills(api_version: str):
     category = request.args.get('category')
     coll: Collection = MongoConnector().base_skill
-    res = list(coll.find(
-        {'category': category} if category else {},
-        {'_id': 0}
-    ))
+    res = list(coll.find({'category': category} if category else {}, {'_id': 0}))
     return jsonify(res)
