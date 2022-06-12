@@ -29,12 +29,13 @@ class CVModel(BaseModel):
         def to_dict(self):
             return {
                 'name': self.name,
-                'categories': self.category,
+                'category': self.category,
                 'grade': self.grade,
             }
 
     def __init__(self, user_id: str, category: str = None, id_: str = None, cv_skills: list = None,
-                 cv_times: list = None, click_count=0, is_hidden=False, help_count=0, **kwargs):
+                 cv_times: list = None, click_count=0, is_hidden=False, help_count=0, experience="",
+                 about="", price="", job="", **kwargs):
         self.id_: str = id_
         self.user_id: str = user_id
         self.category: str = category
@@ -46,6 +47,11 @@ class CVModel(BaseModel):
             cv_skills = []
         self.cv_skills: List[CVModel.SkillModel] = cv_skills
         self.cv_times: list = cv_times if cv_times else []
+
+        self.about: str = about or ""
+        self.job: str = job or ""
+        self.price: str = price or ""
+        self.experience: str = experience or ""
 
         self.click_count = click_count
         self.help_count = help_count
@@ -62,6 +68,10 @@ class CVModel(BaseModel):
             'cv_times': self.cv_times,
             'is_hidden': self.is_hidden,
             'help_count': self.help_count,
+            'about': self.about,
+            'price': self.price,
+            'experience': self.experience,
+            'job': self.job,
             'date_time_add': self.date_time_add,
         }
 
@@ -106,15 +116,22 @@ class CVModel(BaseModel):
         update = {
             '$set': {
                 'categories': kwargs.get('categories', self.category),
-                'cv_skills':
-                    [
-                        x if isinstance(x, dict) else x.to_dict()
-                        for x in kwargs.get('cv_skills', self.cv_skills)
-                    ]
+                'cv_skills': [
+                    x if isinstance(x, dict) else x.to_dict()
+                    for x in kwargs.get('cv_skills', self.cv_skills)
+                ],
+                'job': kwargs.get('job', self.job),
+                'about': kwargs.get('about', self.about),
+                'price': kwargs.get('price', self.price),
+                'experience': kwargs.get('experience', self.experience),
             }
         }
         upsert = False
         self.category = kwargs.get('categories', self.category)
+        self.job = kwargs.get('job')
+        self.about = kwargs.get('about')
+        self.price = kwargs.get('price')
+        self.experience = kwargs.get('experience')
         self.cv_skills = [
             CVModel.SkillModel(**x) if isinstance(x, dict) else x
             for x in kwargs.get('cv_skills', self.cv_skills)

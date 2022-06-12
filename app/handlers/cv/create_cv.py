@@ -5,7 +5,11 @@ from utils.models import UserModel, CVModel
 from utils.validation import validation_request
 
 schema = {
-    "category": {'type': 'string', 'required': False, 'maxlength': 520},
+    "category": {'type': 'string', 'required': False, 'maxlength': 512},
+    'job': {'type': 'string', 'required': False, 'maxlength': 512},
+    'price': {'type': 'string', 'required': False, 'maxlength': 512},
+    'experience': {'type': 'string', 'required': False, 'maxlength': 512},
+    'about': {'type': 'string', 'required': False, 'maxlength': 2048},
     "skills": {
         'type': 'list',
         'required': False,
@@ -14,7 +18,6 @@ schema = {
             'required': False,
             'schema': {
                 "grade": {
-                    'type': 'integer',
                     'allowed': ['bad', 'average', 'good'],  # list(range(11)),  # 0-10
                     'required': True,
                 },
@@ -41,16 +44,21 @@ def create_cv(api_version):
     payload = UserModel.decode_token(request.headers['Authorization'])
     user: UserModel = UserModel.get_from_db(id_=payload['id'])
 
-    skills = [
-        CVModel.SkillModel(**skill)
-        for skill in request_body.get('skills')
-    ]
+    skills = [CVModel.SkillModel(**skill) for skill in request_body.get('skills')]
     cv = CVModel(
         user_id=user.id_,
         category=request_body.get('categories'),
         cv_skills=skills,
-        cv_times=[]
+        cv_times=[],
+        experience=request_body.get('experience'),
+        about=request_body.get('about'),
+        price=request_body.get('price'),
+        job=request_body.get('job'),
     )
     cv.save()
 
-    return {'msg': 'ok', 'inserted': cv.to_dict()}, 200
+    return {
+        'msg': 'ok',
+        'inserted': cv.to_dict(),
+        'user': user.to_dict(),
+    }, 200

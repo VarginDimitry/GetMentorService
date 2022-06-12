@@ -7,6 +7,10 @@ from utils.validation import validation_request
 
 schema = {
     "cv_id": {'type': 'string', 'required': False, 'maxlength': 37},
+    'job': {'type': 'string', 'required': False, 'maxlength': 512},
+    'price': {'type': 'string', 'required': False, 'maxlength': 512},
+    'experience': {'type': 'string', 'required': False, 'maxlength': 512},
+    'about': {'type': 'string', 'required': False, 'maxlength': 2048},
     "category": {'type': 'string', 'required': False, 'maxlength': 520},
     "skills": {
         'type': 'list',
@@ -16,7 +20,6 @@ schema = {
             'required': False,
             'schema': {
                 "grade": {
-                    'type': 'integer',
                     'allowed': ['bad', 'average', 'good'],
                     'required': True,
                 },
@@ -48,7 +51,11 @@ def update_cv(api_version):
 
     cv.update(
         category=request_body.get('categories'),
-        cv_skills=request_body.get('cv_skills', [])
+        cv_skills=request_body.get('cv_skills', []),
+        experience=request_body.get('experience'),
+        about=request_body.get('about'),
+        price=request_body.get('price'),
+        job=request_body.get('job'),
     )
 
     return {'msg': 'ok', 'cv': cv.to_dict()}, 200
