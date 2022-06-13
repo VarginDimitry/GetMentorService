@@ -21,7 +21,9 @@ def get_cv(api_version: str):
     user = UserModel.get_from_db(id_=cv.user_id)
     if not user:
         return ErrorManager.get_res(ErrorEnum.CONFLICT, "CV is invalid")
+    user_dict: dict = user.to_dict()
+    user_dict.pop('password', None)
     return jsonify({
-        'user': user.to_dict(),
+        'user': user_dict,
         'cv': cv.to_dict(),
     })

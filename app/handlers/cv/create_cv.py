@@ -29,7 +29,7 @@ schema = {
                 "category": {
                     'type': 'string',
                     'maxlength': 520,
-                    'required': True,
+                    'required': False,
                 }
             }
         }
