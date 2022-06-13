@@ -41,6 +41,7 @@ class BidModel(BaseModel):
         self.description: str = kwargs.get('description')
         self.answer: str = kwargs.get('answer')
         self.date_time_add: datetime = kwargs.get('date_time_add')
+        self.date_time: datetime = kwargs.get('date_time')
 
     @staticmethod
     def get_from_db(id_: str):
@@ -97,6 +98,7 @@ class BidModel(BaseModel):
             'description': self.description,
             'answer': self.answer,
             'date_time_add': self.date_time_add,
+            'date_time': int(self.date_time.timestamp()),
         }
 
     @staticmethod

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import request
 
 from app import app
@@ -9,6 +11,7 @@ from utils.validation import validation_request
 schema = {
     'to_id': {'type': 'string', 'required': True},
     'description': {'type': 'string', 'required': False, 'maxlength': 2048, 'default': ""},
+    'date_time': {'type': 'number', 'required': False, 'min': 0, 'max': 14277919609}
 }
 
 
@@ -24,7 +27,8 @@ def send_bid(api_version):
     to_user: UserModel = UserModel.get_from_db(id_=request_body['to_id'])
     if not to_user:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, f"User with id={request_body['to_id']} not found")
-
+    elif user.id_ == to_user.id_:
+        return ErrorManager.get_res(ErrorEnum.CONFLICT, f"Can not send bid to self")
     bid = BidModel(
         from_id=user.id_,
         from_name=user.first_name,
@@ -32,6 +36,7 @@ def send_bid(api_version):
         to_name=to_user.first_name,
         status=BidStatus.NOT_SEEN,
         description=request_body['description'],
+        date_time=datetime.fromtimestamp(int(request_body['date_time'])) if request_body['date_time'] else None,
     )
     save_res = bid.save()
     if 'error' not in save_res.keys():
