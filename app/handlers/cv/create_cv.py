@@ -47,7 +47,7 @@ def create_cv(api_version):
     skills = [CVModel.SkillModel(**skill) for skill in request_body.get('skills')]
     cv = CVModel(
         user_id=user.id_,
-        category=request_body.get('categories'),
+        category=request_body.get('category'),
         cv_skills=skills,
         cv_times=[],
         experience=request_body.get('experience'),

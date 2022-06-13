@@ -50,7 +50,7 @@ def update_cv(api_version):
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, "CV has not found")
 
     cv.update(
-        category=request_body.get('categories'),
+        category=request_body.get('category'),
         cv_skills=request_body.get('cv_skills', []),
         experience=request_body.get('experience'),
         about=request_body.get('about'),
