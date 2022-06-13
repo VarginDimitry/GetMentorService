@@ -63,7 +63,7 @@ class CVModel(BaseModel):
         return {
             'id_': self.id_,
             'user_id': self.user_id,
-            'categories': self.category,
+            'category': self.category,
             'cv_skills': [x.to_dict() for x in self.cv_skills],
             'cv_times': self.cv_times,
             'is_hidden': self.is_hidden,
@@ -115,7 +115,7 @@ class CVModel(BaseModel):
         }
         update = {
             '$set': {
-                'categories': kwargs.get('categories', self.category),
+                'category': kwargs.get('category', self.category),
                 'cv_skills': [
                     x if isinstance(x, dict) else x.to_dict()
                     for x in kwargs.get('cv_skills', self.cv_skills)
@@ -127,7 +127,7 @@ class CVModel(BaseModel):
             }
         }
         upsert = False
-        self.category = kwargs.get('categories', self.category)
+        self.category = kwargs.get('category', self.category)
         self.job = kwargs.get('job')
         self.about = kwargs.get('about')
         self.price = kwargs.get('price')

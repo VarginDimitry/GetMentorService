@@ -135,9 +135,9 @@ def get_search_filter(text_: str) -> dict:
     regex = re.compile(text_, re.IGNORECASE)
     filter_ = {
         '$or': [
-            {'categories': {'$regex': regex}},
+            {'category': {'$regex': regex}},
             {'cv_skills.name': {'$regex': regex}},
-            {'cv_skills.categories': {'$regex': regex}},
+            {'cv_skills.category': {'$regex': regex}},
         ]
     }
     return filter_

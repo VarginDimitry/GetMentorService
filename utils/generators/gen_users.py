@@ -9,27 +9,27 @@ skills = [
     {
         "grade": 10,
         "name": "Python4",
-        "categories": "Programming"
+        "category": "Programming"
     },
     {
         "grade": 5,
         "name": "Java4",
-        "categories": "Programming"
+        "category": "Programming"
     },
     {
         "grade": 1,
         "name": "English",
-        "categories": "Language"
+        "category": "Language"
     },
     {
         "grade": 5,
         "name": "Docker",
-        "categories": "Devops"
+        "category": "Devops"
     },
     {
         "grade": 5,
         "name": "GOTOvit pelmeni",
-        "categories": "Cooking"
+        "category": "Cooking"
     }
 ]
 
