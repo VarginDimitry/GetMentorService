@@ -7,15 +7,11 @@ from utils.validation import validation_request
 
 
 @app.route('/api/<api_version>/cv/get_cv/', methods=['GET'])
-@validation_request(with_token=True)
+@validation_request(with_token=False)
 def get_cv(api_version: str):
-    payload = UserModel.decode_token(request.headers['Authorization'])
     cv_id = request.args['cv_id']
 
-    cv = CVModel.get_from_db(
-        id_=cv_id,
-        user_id=payload['id']
-    )
+    cv = CVModel.get_from_db(id_=cv_id)
     if not cv:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, "CV with this id not found")
     user = UserModel.get_from_db(id_=cv.user_id)
