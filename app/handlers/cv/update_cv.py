@@ -51,7 +51,7 @@ def update_cv(api_version):
 
     cv.update(
         category=request_body.get('category'),
-        cv_skills=request_body.get('cv_skills', []),
+        cv_skills=request_body.get('skills', []),
         experience=request_body.get('experience'),
         about=request_body.get('about'),
         price=request_body.get('price'),
