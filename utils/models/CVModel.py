@@ -128,10 +128,10 @@ class CVModel(BaseModel):
         }
         upsert = False
         self.category = kwargs.get('category', self.category)
-        self.job = kwargs.get('job')
-        self.about = kwargs.get('about')
-        self.price = kwargs.get('price')
-        self.experience = kwargs.get('experience')
+        self.job = kwargs.get('job', self.job)
+        self.about = kwargs.get('about', self.about)
+        self.price = kwargs.get('price', self.price)
+        self.experience = kwargs.get('experience', self.experience)
         self.cv_skills = [
             CVModel.SkillModel(**x) if isinstance(x, dict) else x
             for x in kwargs.get('cv_skills', self.cv_skills)
