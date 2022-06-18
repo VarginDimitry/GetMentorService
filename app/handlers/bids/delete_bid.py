@@ -14,11 +14,17 @@ from utils.validation import validation_request
 def delete_bid(api_version):
     request_body: dict = request.args
     payload = UserModel.decode_token(request.headers['Authorization'])
-    MongoConnector().bid.delete_one({
+    delete_res = BidModel.coll.delete_one({
         'id_': request_body.get('id_'),
         '$or': [
             {'from_id': payload['id']},
             {'to_id': payload['id']},
         ]
     })
-    return {'msg': 'ok'}, 200
+    if delete_res.deleted_count:
+        return {'msg': 'ok'}, 200
+    else:
+        return ErrorManager.get_res(
+            ErrorEnum.NOT_FOUND,
+            "The bid doesn't exists or you have no permissions for this bid"
+        )
