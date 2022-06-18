@@ -12,6 +12,6 @@ def get_me(api_version):
     payload = UserModel.decode_token(request.headers['Authorization'])
     user: UserModel = UserModel.get_from_db(id_=payload['id'])
     if user:
-        return {'user': user.to_dict(with_cvs=True)}, 200
+        return {'user': user.to_dict(with_cvs=True, safe=True)}, 200
     else:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, "")

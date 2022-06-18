@@ -108,7 +108,7 @@ class UserModel(BaseModel):
 
             return self.to_dict()
 
-    def to_dict(self, with_cvs=False) -> dict:
+    def to_dict(self, with_cvs=False, safe=True) -> dict:
         res = {
             'id_': self.id_,
             'first_name': self.first_name,
@@ -116,13 +116,16 @@ class UserModel(BaseModel):
             'last_name': self.last_name,
             'gender': self.gender.value,
             'email': self.email,
-            'password': self.password,
             'phone': self.phone,
             'telegram_profile': self.telegram_profile,
             'date_time_add': self.date_time_add,
-            'is_admin': self.is_admin,
             'about_me': self.about_me,
         }
+        if not safe:
+            res |= {
+                'password': self.password,
+                'is_admin': self.is_admin,
+            }
         if with_cvs:
             from utils.models import CVModel
             res['cvs'] = CVModel.get_many_from_db(self.id_, as_dict=True)

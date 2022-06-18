@@ -60,5 +60,5 @@ def create_cv(api_version):
     return {
         'msg': 'ok',
         'inserted': cv.to_dict(),
-        'user': user.to_dict(),
+        'user': user.to_dict(safe=True),
     }, 200

@@ -18,7 +18,7 @@ def users_get_users(api_version: str):
             user: UserModel = UserModel.get_from_db(id_=request.args.get('user_id'))
 
             return {
-                'user': user.to_dict()
+                'user': user.to_dict(safe=True)
             }, 200
         else:
             users: List[UserModel] = list(UserModel.conn.user.find({}))

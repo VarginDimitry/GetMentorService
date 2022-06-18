@@ -2,8 +2,8 @@ FROM timbru31/node-alpine-git as builder
 
 RUN git clone https://github.com/kkvotinova/mentiRu
 WORKDIR mentiRu
-RUN npm i && \
-    npm i typescript@4.6.2
+RUN npm install -g npm@8.12.2 && \
+    npm i
 
 RUN npm run build:prod --output-path=/dist
 

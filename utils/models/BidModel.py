@@ -40,8 +40,20 @@ class BidModel(BaseModel):
             self.status: BidStatus = kwargs.get('status')
         self.description: str = kwargs.get('description')
         self.answer: str = kwargs.get('answer')
-        self.date_time_add: datetime = kwargs.get('date_time_add')
-        self.date_time: datetime = kwargs.get('date_time')
+        if kwargs.get('date_time_add'):
+            if isinstance(kwargs.get('date_time_add'), datetime):
+                self.date_time_add: datetime = kwargs.get('date_time_add')
+            else:
+                self.date_time_add: datetime = datetime.fromtimestamp(kwargs.get('date_time_add'))
+        else:
+            self.date_time_add: datetime = None
+        if kwargs.get('date_time'):
+            if isinstance(kwargs.get('date_time'), datetime):
+                self.date_time: datetime = kwargs.get('date_time')
+            else:
+                self.date_time: datetime = datetime.fromtimestamp(kwargs.get('date_time'))
+        else:
+            self.date_time: datetime = None
 
     @staticmethod
     def get_from_db(id_: str):
