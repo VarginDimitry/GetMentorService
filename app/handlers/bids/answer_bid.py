@@ -27,11 +27,14 @@ def answer_bid(api_version):
         'answer': request_body.get('answer', ''),
     })
     if 'error' not in upd_res:
+        to_user = UserModel.get_from_db(bid.to_id)
+        if BidStatus(request_body.get('status')) == BidStatus.ACCEPTED:
+            to_user.update({'help_count': to_user.help_count+1})
         return {
                    'msg': 'ok',
                    'bid': upd_res,
                    'from_user': UserModel.get_from_db(bid.from_id).to_dict(safe=True),
-                   'to_user': UserModel.get_from_db(bid.to_id).to_dict(safe=True),
+                   'to_user': to_user.to_dict(safe=True),
                }, 200
     else:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, f"Update error")

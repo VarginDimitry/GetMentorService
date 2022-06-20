@@ -54,7 +54,6 @@ class CVModel(BaseModel):
         self.experience: str = experience or ""
 
         self.click_count = click_count
-        self.help_count = help_count
         self.is_hidden = is_hidden
 
         self.date_time_add: int = None
@@ -67,7 +66,6 @@ class CVModel(BaseModel):
             'cv_skills': [x.to_dict() for x in self.cv_skills],
             'cv_times': self.cv_times,
             'is_hidden': self.is_hidden,
-            'help_count': self.help_count,
             'about': self.about,
             'price': self.price,
             'experience': self.experience,
