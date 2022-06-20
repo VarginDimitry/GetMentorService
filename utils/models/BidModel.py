@@ -20,9 +20,6 @@ class BidStatus(Enum):
     ACCEPTED = 'accepted'
     REJECTED = 'rejected'
 
-    def __missing__(self, key):
-        return self.NOT_SEEN
-
 
 class BidModel(BaseModel):
     coll_name = 'bid'
@@ -35,6 +32,8 @@ class BidModel(BaseModel):
         self.to_id: str = kwargs.get('to_id')
         self.to_name: str = kwargs.get('to_name')
         if isinstance(kwargs.get('status'), str):
+            if kwargs.get('status') == 'not_seen':
+                kwargs['stats'] = 'not_seen'
             self.status: BidStatus = BidStatus(kwargs.get('status'))
         else:
             self.status: BidStatus = kwargs.get('status')
@@ -57,7 +56,7 @@ class BidModel(BaseModel):
 
     @staticmethod
     def get_from_db(id_: str):
-        res = BidModel.coll.find_one({'id_': id_}, {'_id': 0})
+        res: dict = BidModel.coll.find_one({'id_': id_}, {'_id': 0})
         return BidModel.get_from_dict(res) if res else None
 
     def save(self):
