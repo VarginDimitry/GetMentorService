@@ -16,7 +16,7 @@ from utils.models import BaseModel, CVModel
 
 
 class BidStatus(Enum):
-    NOT_SEEN = 'not_seen'
+    NOT_SEEN = 'not seen'
     ACCEPTED = 'accepted'
     REJECTED = 'rejected'
 
