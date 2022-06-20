@@ -33,7 +33,7 @@ def send_bid(api_version):
         from_id=user.id_,
         from_name=f"{user.first_name} {user.last_name}",
         to_id=to_user.id_,
-        to_name=f"{to_user.first_name} {user.last_name}",
+        to_name=f"{to_user.first_name} {to_user.last_name}",
         status=BidStatus.NOT_SEEN,
         description=request_body['description'],
         date_time=datetime.fromtimestamp(int(request_body['date_time'])) if request_body['date_time'] else None,
