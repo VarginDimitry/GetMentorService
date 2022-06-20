@@ -103,7 +103,7 @@ def get_filters(filters: dict) -> dict:
             if skill_num.get('to'):
                 where = f"{where} || this.cv_skills.length >= {skill_num.get('to')}"
             filter_['$where'] = where
-    if filters.get('categories') is not None:
+    if filters.get('categories'):
         filter_['category'] = {'$in': filters.get('categories')}
     if filters.get('user_id'):
         filter_['user_id'] = filters.get('user_id')
