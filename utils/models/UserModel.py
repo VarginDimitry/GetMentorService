@@ -79,7 +79,7 @@ class UserModel(BaseModel):
             return {'error': 'User with this data already exists'}
         else:
             self.password = hashlib.sha256(self.password.encode()).hexdigest()
-            UserModel.coll.insert_one(self.to_dict())
+            UserModel.coll.insert_one(self.to_dict(safe=False))
             return self.to_dict()
 
     def update(self, set_dict: dict):
