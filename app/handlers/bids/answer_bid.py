@@ -22,13 +22,14 @@ def answer_bid(api_version):
     bid = BidModel.get_from_db(request_body['bid_id'])
     if not bid or bid.to_id != payload['id']:
         return ErrorManager.get_res(ErrorEnum.NOT_FOUND, f"User has not this bid")
+    help_flag = bid.status != BidStatus.ACCEPTED and BidStatus(request_body.get('status')) == BidStatus.ACCEPTED
     upd_res = bid.update({
         'status': request_body.get('status'),
         'answer': request_body.get('answer', ''),
     })
     if 'error' not in upd_res:
         to_user = UserModel.get_from_db(bid.to_id)
-        if BidStatus(request_body.get('status')) == BidStatus.ACCEPTED:
+        if help_flag:
             to_user.update({'help_count': to_user.help_count+1})
         return {
                    'msg': 'ok',

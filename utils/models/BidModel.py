@@ -109,7 +109,7 @@ class BidModel(BaseModel):
             'description': self.description,
             'answer': self.answer,
             'date_time_add': self.date_time_add,
-            'date_time': int(self.date_time.timestamp()),
+            'date_time': int(self.date_time.timestamp()) if self.date_time else None,
         }
 
     @staticmethod
